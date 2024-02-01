@@ -1,0 +1,23 @@
+/*
+Name: Rami Aljanaby
+Date: 1/31/24
+Description: This site demonstrates features of the DOM 
+*/
+
+/*Container Style*/
+#container {
+    float: auto;
+    border: 3px solid red;
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+    text-align: center;
+
+/*Button Style*/
+}
+#button {
+    padding: 10px;
+    display: block;
+    float: auto;
+    margin: auto;
+}
