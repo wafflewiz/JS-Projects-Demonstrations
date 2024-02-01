@@ -1,3 +1,9 @@
+/*
+Name: Rami Aljanaby
+Date: 1/31/24
+Description: This site demonstrates features of the DOM 
+*/
+
 var body = document.querySelector(".body");
 var para = document.createElement("p");
 var node = document.createTextNode("\nThis is a new paragraph.\n");
