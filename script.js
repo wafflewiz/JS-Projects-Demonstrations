@@ -29,10 +29,6 @@ function changeColor() {
     setTimeout(changeColor, slider.value); 
 }
 
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-slider.innerHTML = this.value;
-  }
 
 // Add event listener to button
 button.addEventListener("click", changeColor);
