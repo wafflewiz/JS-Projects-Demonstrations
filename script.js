@@ -8,7 +8,6 @@ const colors =["red", "blue", "green", "white", "purple", "orange", "yellow", "p
 const button = document.querySelector("button");
 var slider = document.getElementById("mySlider");
 colorIndex = 0;
-output.innerHTML = slider.value; // Display the default slider value
 
 
 var dialogbox = window.alert("CAUTION! This web app contains rapidly flashing colors!");
