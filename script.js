@@ -20,8 +20,8 @@ colorIndex = 0;
 //Warns the user 
 var dialogbox = window.alert("CAUTION! This web app contains rapidly flashing colors!");
 
-//This function changes the background color by iterating through the colors array
-function changeColor() {
+//This function expression changes the background color by iterating through the colors array
+const changeColor = function () {
     // Sets background color to the color at current index
     document.body.style.backgroundColor = colors[colorIndex];
     
