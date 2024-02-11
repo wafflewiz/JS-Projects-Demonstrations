@@ -11,27 +11,27 @@
         
     </head>
     <body>
-        <p>
-            Click the button to begin:
-        </p>
+        <div id ="colorDisplay">
+            <p>
+                Click the button to begin:
+            </p>
 
-        <button id = "button">Change Color</button>
-        
-        <p>
-            Adjust interval in seconds between color changes:
-        </p>
+            <button id = "button">Change Color</button>
+            <button id = "button2">RESET</button>
 
-        <div id="slider">
-            <input type="range" min="1" max="5" value="2.5" id="colorslider">
-        </div>
+            
+            <div id ="colorInfo"><br></div>
 
-        <div id ="infoDisplay">
 
         </div>
-        
-        <button id = "button2">STOP</button>
-
-        <div id="paragraph">
+        <div id="sliderDisplay">
+            <p>
+                Adjust interval in seconds between color changes:
+            </p>
+            <div id="slider">
+                <input type="range" min="1" max="5" value="2.5" id="colorslider">
+            </div>
+            <div id="sliderInfo"></div>
 
         </div>
     </body>

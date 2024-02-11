@@ -10,35 +10,32 @@ addEventListener("DOMContentLoaded", (event) => {});
 //TODO: use a node for document.body - consider changing the color of a small area instead of background
 
 // Initialize array, document objects, and variables to manipulate the DOM
-const colors =["red", "blue", "green", "white", "purple", "orange", "yellow", "pink", "brown","Chartreuse"];
+const colors =["Red", "Blue", "Green", "White", "Purple", "Orange", "Yellow", "Pink", "Brown","Chartreuse"];
 
 //Variable for the button to begin changing the background colors
-const button = document.getElementById("button");
 const stopButton = document.getElementById("button2");
-const paragraph = document.getElementById("paragraph");
 
-//Variable to store the slider which will be used to change color strobe speed
+//Variable to store the slider which will be used to change color change speed
 var slider = document.getElementById("colorslider");
-const createPara = document.createElement("p");
 
+//User text prompts
+const silderInfo = document.getElementById("sliderInfo");
+const colorInfo = document.getElementById("colorInfo");
 
-
-//var paragraph = document.getElementsById("paragraph");
 colorIndex = 0;
-let text = "";
-
-
-//Warns the user 
-//window.alert("CAUTION! This web app contains rapidly flashing colors!");
 
 //This function expression changes the background color by iterating through the colors array
 const changeColor = function () {
-        const currentColorTxt = document.createTextNode(colors[colorIndex]);
-        const currentSliderValue = document.createTextNode(slider.value);
+    
+        const currentColorTxt = document.createTextNode("Current color is: " + colors[colorIndex]);
+        const currentSliderTxt = document.createTextNode("Current interval is: " + slider.value + " seconds");
 
         while (colorIndex <= colors.length ){
-            
-            paragraph.appendChild(currentColorTxt);
+            sliderInfo.textContent="";
+            sliderInfo.appendChild(currentSliderTxt);
+
+            colorInfo.textContent="";
+            colorInfo.appendChild(currentColorTxt);
 
             break;
         }
@@ -62,13 +59,8 @@ const changeColor = function () {
 
         stopButton.addEventListener("click", () => {
             location.reload();
-        });
-
-    
+        }); 
 }
-
-
-
 
 // Add event listener to button that runs the changeColor function on click
 button.addEventListener("click", changeColor);
