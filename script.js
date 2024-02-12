@@ -53,7 +53,7 @@ const changeColor = function () {
         // Call setTimeout recursively to change color after a delay based on slider input
         setTimeout(changeColor, slider.value*1000); 
 
-        // Display the current color as text
+        // Refresh the page when the rest button is pressed
         stopButton.addEventListener("click", () => {
             location.reload();
         }); 
