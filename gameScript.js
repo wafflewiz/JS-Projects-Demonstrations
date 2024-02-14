@@ -1,7 +1,5 @@
 mainPara = document.querySelector("#mainPara").innerHTML;
 
-
-
 var playerChar = {
     hp: 100,
     dmg: 25,
