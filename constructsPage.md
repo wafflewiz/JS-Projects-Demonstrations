@@ -1,0 +1,13 @@
+layout: page
+title: "JS Closures"
+permalink: /Closures
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="closures.js" defer></script>
+    </head>
+    <body>
+        <div class="moves"></div>
+    </body>
+</html>
