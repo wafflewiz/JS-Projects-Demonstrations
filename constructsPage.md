@@ -1,6 +1,6 @@
 layout: page
 title: "JS Closures"
-permalink: /Closures
+permalink: https://wafflewiz.github.io/Unit-2/Closures
 
 <!DOCTYPE html>
 <html>
