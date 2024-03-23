@@ -1,7 +1,7 @@
 const player1 = new Fighter("P1", 100, "Jab", "Low Kick" );
 const player2 = new Fighter("P2", 100, "Jab", "Low Kick" );
-let p1JabImg = document.getElementById('p1AtkImg');
-window.requestAnimationFrame(animate);
+//let p1JabImg = document.getElementById('p1AtkImg');
+//window.requestAnimationFrame(animate);
 var blocking = false;
 
 p1JabImg.onload = function(){
