@@ -24,8 +24,9 @@ function preloadImages(images, callback) {
     });
 }
 preloadImages(imgObject.imgArray, function() {
-    init();
-    defaultState();
+   console.log(img.src);
+    // init();
+    // defaultState();
 });
   
 
@@ -66,7 +67,7 @@ let context = canvas.getContext("2d");
 
 //draws the 2D image onto canvas
 function drawFrame(frameX, frameY, canvasX, canvasY) {
-    context.drawImage(imgObject.imgArray.src,
+    context.drawImage(image.src,
                   frameX * width, frameY * height, width, height,
                   canvasX, canvasY, scaledWidth, scaledHeight);
 }
@@ -177,7 +178,7 @@ function p1Attack() {
       switch (player1.currentMove) {
         case "Jab":
           player2.hp -= 5;
-          currentImg = imgObject.imgArray.src= "assets/P1Sprite/Attack_1.png"
+        image.src= "assets/P1Sprite/Attack_1.png"
           player1.currentAnimState="Jabbing";
           console.log("P2 -5 HP!");
           break;
