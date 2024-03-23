@@ -1,7 +1,25 @@
 //If we were dealing with multiple images, we'd probably want to use Promises to wait for all of them to load before doing anything with them.
+document.addEventListener("DOMContentLoaded", function() {
+    const imageContainer = document.getElementById("image-gallery");
 
-const player1 = new Fighter("P1", 100, "Jab", "Low Kick");
-const player2 = new Fighter("P2", 100, "Jab", "Low Kick");
+    // Array of image file names
+    const imageFiles = [
+        "assets/P1Sprite/Attack_1.png",
+        "assets/P1Sprite/Attack_3.png",
+        "iassets/P1Sprite/Attack_1.png",
+        // Add more image file names as needed
+    ];
+
+    // Loop through image file names and create <img> elements
+    imageFiles.forEach(function(imageFile) {
+        const imgElement = document.createElement("img");
+        imgElement.src = `images/${imageFile}`; // Assuming images folder is named "images"
+        imgElement.alt = "Image";
+        imageContainer.appendChild(imgElement);
+    });
+});
+const player1 = new Fighter("P1", 100, "", "", "Jab", "Low Kick");
+const player2 = new Fighter("P2", 100, "", "", "Jab" , "Low Kick");
 //size of img
 const scale = 1.2;
 //dimensions used for img and canvas
@@ -9,8 +27,9 @@ const width = 132;
 const height = 132;
 const scaledWidth = scale * width;
 const scaledHeight = scale * height;
-cycleLoop= [0, 1, 0, 2]
-
+cycleLoop= [0, 1, 0, 2];
+//object containing move frame data within arrays 
+//currentAnimState = ["Idle", "Jabbing", "Kicking", "Hurt", "Dead"];
 const animLoops= {
   alP1Idle: [0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6],  
   alP1Jab: [0, 1, 0, 2],
@@ -82,7 +101,14 @@ function animateJab() {
         }
         frameCount = 0;
         context.clearRect(0, 0, canvas.width, canvas.height);
-        drawFrame(animLoops.alP1Jab[currentLoopIndex], 0, 0, 0);
+        switch (player1.currentAnimState) {
+            case "Standing":       
+              break;
+            case "Jabbing":
+            drawFrame(animLoops.alP1Jab[currentLoopIndex], 0, 0, 0);  
+              break;
+          }
+        //drawFrame(animLoops.alP1Jab[currentLoopIndex], 0, 0, 0);
         currentLoopIndex++;
         if (currentLoopIndex >= cycleLoop.length+1) {
             nextMoveRdy=false;
@@ -141,6 +167,7 @@ function p1Attack() {
       switch (player1.currentMove) {
         case "Jab":
           player2.hp -= 5;
+          player1.currentAnimState="Jabbing";
           console.log("P2 -5 HP!");
           break;
         case "Low Kick":
