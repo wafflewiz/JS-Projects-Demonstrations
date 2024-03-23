@@ -1,23 +1,34 @@
 //If we were dealing with multiple images, we'd probably want to use Promises to wait for all of them to load before doing anything with them.
-document.addEventListener("DOMContentLoaded", function() {
-    const imageContainer = document.getElementById("image-gallery");
 
-    // Array of image file names
-    const imageFiles = [
-        "assets/P1Sprite/Attack_1.png",
-        "assets/P1Sprite/Attack_3.png",
-        "iassets/P1Sprite/Attack_1.png",
-        // Add more image file names as needed
-    ];
+ const imgObject = {imgArray: [
+    { name: "imgP1Jab", src: "assets/P1Sprite/Attack_1.png" },
+    { name: "imgP1Kick", src: "assets/P1Sprite/Attack_3.png" },
+    { name: "imgP1Idle", src: "assets/P1Sprite/Idle.png" },
+    { name: "Imgp1Hurt", src: "assets/P1Sprite/Hurt.png" },
+    { name: "ImgP1Dead", src: "assets/P1Sprite/Dead.png" }
+]};
 
-    // Loop through image file names and create <img> elements
-    imageFiles.forEach(function(imageFile) {
-        const imgElement = document.createElement("img");
-        imgElement.src = `images/${imageFile}`; // Assuming images folder is named "images"
-        imgElement.alt = "Image";
-        imageContainer.appendChild(imgElement);
+function preloadImages(images, callback) {
+    let loadedImages = 0;
+    const numImages = images.length;
+
+    images.forEach(image => {
+        const img = new Image();
+        img.onload = function() {
+            loadedImages++;
+            if (loadedImages === numImages) {
+                callback();
+            }
+        };
+        img.src = image.src;
     });
+}
+preloadImages(imgObject.imgArray, function() {
+    init();
+    defaultState();
 });
+  
+
 const player1 = new Fighter("P1", 100, "", "", "Jab", "Low Kick");
 const player2 = new Fighter("P2", 100, "", "", "Jab" , "Low Kick");
 //size of img
@@ -36,19 +47,18 @@ const animLoops= {
   alP1Kick: [0, 1, 0, 2, 0, 3, 0, 4],
   alP1Hurt: [],
   alP1Dead: [],
-}
+};
 
 //index for the animation loop array
+let currentImg = "";
 let currentLoopIndex = 0;
 nextMoveRdy = true;
 var blocking = false;
 let frameCount = 0;
-let p1JabImg = new Image();
-p1JabImg.src = "assets/P1Sprite/Attack_1.png";
-p1JabImg.onload = function () {
-  init();
-  defaultState();
-};
+// let p1JabImg = new Image();
+// p1JabImg.src = "assets/P1Sprite/Attack_1.png";
+
+
 
 //create a 2D canvas element 
 let canvas = document.querySelector("canvas");
@@ -56,7 +66,7 @@ let context = canvas.getContext("2d");
 
 //draws the 2D image onto canvas
 function drawFrame(frameX, frameY, canvasX, canvasY) {
-    context.drawImage(p1JabImg,
+    context.drawImage(imgObject.imgArray.src,
                   frameX * width, frameY * height, width, height,
                   canvasX, canvasY, scaledWidth, scaledHeight);
 }
@@ -167,6 +177,7 @@ function p1Attack() {
       switch (player1.currentMove) {
         case "Jab":
           player2.hp -= 5;
+          currentImg = imgObject.imgArray.src= "assets/P1Sprite/Attack_1.png"
           player1.currentAnimState="Jabbing";
           console.log("P2 -5 HP!");
           break;
