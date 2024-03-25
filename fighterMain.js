@@ -326,7 +326,7 @@ loadImages().then((images) => {
         console.log(player2.hp);
         break;
       case "Kick":
-        player2.hp -= 5;
+        player2.hp -= 10;
         p1CurrentImg = images[1];
         player1.currentAnimState = "Kicking";
         p2DrawHealthBar();
@@ -344,8 +344,8 @@ loadImages().then((images) => {
         window.requestAnimationFrame(animateP2);
         p1DrawHealthBar();
         break;
-      case "Kick":
-        player1.hp -= 10;
+      case "Kick": //Big Jab
+        player1.hp -= 10; //Big Jab Dmg
         p2CurrentImg = images[4];
         player2.currentAnimState = "Kicking";
         window.requestAnimationFrame(animateP2);
