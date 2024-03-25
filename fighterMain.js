@@ -54,7 +54,7 @@ loadImages().then((images) => {
     const animLoops= {
       alP1Idle: [0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6],  
       alP1Jab: [0, 1, 0, 2],
-      alP1Kick: [0, 1, 0, 2, 0, 3, 0, 4],
+      alP1Kick: [0, 1, 0, 2, 0, 3],
       alP1Hurt: [],
       alP1Dead: [],
     
@@ -78,6 +78,7 @@ loadImages().then((images) => {
 
     let p1FrameCount = 0;
     let p2FrameCount = 0;
+    let lengthOfArray = 0;
     
     // let p1JabImg = new Image();
     // p1JabImg.src = "assets/P1Sprite/Attack_1.png";
@@ -133,10 +134,8 @@ loadImages().then((images) => {
                      300 , 128, scaledWidth, scaledHeight);
     }
     function p1DefaultState(){
-        
-
-        //p1DrawFrame(animLoops.alP1Jab[1], 0, 0, 0);
-        //p2DrawFrame(animLoops.alP2Jab[1], 0, 0, 0);
+        console.log("default stae")
+        p1CurrentLoopIndex=0;
     
     }
     function p2DefaultState(){
@@ -188,74 +187,33 @@ loadImages().then((images) => {
     }
     //
     function animateP1() {
-        console.log("animateP1");
-
-        console.log("frrames" + p1FrameCount);   
-
-            console.log(player1.currentAnimState);   
-            p1FrameCount++;
-            if (p1FrameCount < 10) {
+        p1FrameCount++;
+        if (p1FrameCount < 5) {
             window.requestAnimationFrame(animateP1);
             return;
-            }
-            p1FrameCount = 0;
-            context.clearRect(0, 128, scaledWidth, scaledHeight);
-            console.log(player1.currentAnimState + "check 2");   
-
-            switch (player1.currentAnimState) {
-                case "Standing":
-                   // context.beginPath();    
-                p1DrawFrame(animLoops.alP1Idle[p1CurrentLoopIndex], 0, 0, 0);
-                p1CurrentLoopIndex++;
-                
-                if (p1CurrentLoopIndex >= animLoops.alP1Idle.length+1) {
-                    p1NextMoveRdy=false;
-                     
-                        
-                  }         
-                  break;
-                case "Jabbing":
-                //context.beginPath();    
-                for (let index = 0; index < animLoops.alP1Jab.length; index++) {
-                   console.log("next moove ready" + p1NextMoveRdy)
-                        const element = animLoops.alP1Jab[index];
-                        p1DrawFrame(element, 0, 0, 0);
-                    //console.log("IM BEING CALLED")
-                    console.log("index is" + index)
-
-                    console.log( "length of array is" + animLoops.alP1Jab.length);
-                    //window.requestAnimationFrame(animateP1);
-                }  
+        }
+        p1FrameCount = 0;
+        context.clearRect(0, 128, scaledWidth, scaledHeight);
+        switch (player1.currentAnimState) {              
+            case "Jabbing":
+                p1DrawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
                 p1NextMoveRdy=false;
-                window.requestAnimationFrame(animateP1);
-
-                  break;
-                case "Kicking":
-                //context.beginPath();   
-                p1CurrentLoopIndex++;
-                if (p1CurrentLoopIndex >= animLoops.alP1Jab.length+1) {
-                    p1NextMoveRdy=false;
-                    p1DefaultState();
-                } 
-                    break;
-                case "Dead":
-                    context.beginPath();    
-                    p1DrawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
-                    p1CurrentLoopIndex++;
-                    if (p1CurrentLoopIndex >= animLoops.alP1Jab.length+1) {                       
-                    }  
-
-                p1DrawFrame(animLoops.alP1Kick[p1CurrentLoopIndex], 0, 0, 0);  
-                  break;
-            }
-            //drawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
-        //    if (p1NextMoveRdy){
-        //         console.log("IM BEING CALLED")
-        //         window.requestAnimationFrame(animateP1);
-                
-        //     }
-        
-    }
+                lengthOfArray=animLoops.alP1Jab.length;
+            break;
+            case "Kicking":
+                p1DrawFrame(animLoops.alP1Kick[p1CurrentLoopIndex], 0, 0, 0);
+                p1NextMoveRdy=false;
+                lengthOfArray=animLoops.alP1Kick.length;
+            break;
+        }
+        p1CurrentLoopIndex++;
+        if (!p1NextMoveRdy && p1CurrentLoopIndex < lengthOfArray){
+            window.requestAnimationFrame(animateP1);
+        }
+        else{
+            p1DefaultState();
+        }  
+}
     function animateP2() {
         while (p2NextMoveRdy){    
             p2FrameCount++;
