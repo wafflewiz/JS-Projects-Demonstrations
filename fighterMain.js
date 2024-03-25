@@ -62,31 +62,67 @@ loadImages().then((images) => {
     let canvas = document.querySelector("canvas");
     let context = canvas.getContext("2d");
 
-    //Creates P1 Health bar
+    //Creates Health Bars
     function p1DrawHealthBar() {
-        console.log("p1DrawHealthBar");
+        if (player1.hp>0) {
+            console.log("p1DrawHealthBar");
+        
+            // Clear the area for player 1's health bar
+            context.clearRect(20, 50, 220, 15);
     
-        // Clear the area for player 1's health bar
-        context.clearRect(20, 50, 200, 15);
+        
+            // Draw the health bar for player 1
+            context.fillStyle = "violet";
+            context.fillRect(220, 50, player1.hp * 2*-1, 15);
+        }
+        else {
+            if (canvas){
+                canvas.parentNode.removeChild(canvas);
+                var messageElement = document.createElement('div');
+                messageElement.textContent = "Player 2 wins!\n\r" + "Reloading Page in 5 seconds...";
+                messageElement.style.fontSize = "24px";
+                messageElement.style.textAlign = "center";
+                messageElement.style.marginTop = "50px";
+                document.body.appendChild(messageElement);
 
-    
-        // Draw the health bar for player 1
-        context.fillStyle = "aqua";
-        context.fillRect(20, 50, player1.hp * 2, 15);
+                // Refresh the page after 5 seconds
+                setTimeout(function() {
+                    location.reload();
+                }, 5000);
+
+            }
+        }
     }
     function p2DrawHealthBar() {
-        var newX = 450 - (player2.hp * 2) - 10
-        console.log("p2DrawHealthBar");
-    
-        // Clear the area for player 2's health bar
-        context.clearRect(20 + (player1.maxHp * 2) - (player1.hp * 2), 50, player2.hp*2 , 15);
-    
-        // Calculate the width of the health bar based on player 2's current health
-        var healthBarWidth = Math.max(0, player2.hp * 2);
-    
-        // Draw the health bar for player 2
-        context.fillStyle = "aqua";
-        context.fillRect(20 + (player2.maxHp * 2) - (player1.hp * 2), 50, player2.hp , 15);
+        if (player2.hp > 0) {
+            var newX = 450 - (player2.hp * 2) - 10
+            console.log("p2DrawHealthBar");
+        
+            // Clear the area for player 2's health bar
+            context.clearRect(240, 50, 220 , 15);
+        
+        
+            // Draw the health bar for player 2
+            context.fillStyle = "violet";
+            context.fillRect(240, 50, player2.hp*2, 15);
+        }
+        else{
+            if (canvas){
+                canvas.parentNode.removeChild(canvas);
+                var messageElement = document.createElement('div');
+                messageElement.textContent = "Player 1 wins!\n\r" + "Reloading Page in 5 seconds...";
+                messageElement.style.fontSize = "24px";
+                messageElement.style.textAlign = "center";
+                messageElement.style.marginTop = "50px";
+                document.body.appendChild(messageElement);
+
+                // Refresh the page after 5 seconds
+                setTimeout(function() {
+                    location.reload();
+                }, 5000);
+
+            }
+        }
     }
  
 
@@ -119,16 +155,16 @@ loadImages().then((images) => {
         //Listens for a keyboard input
         KeyInput = window.addEventListener("keydown", function (event) {
             switch (event.key) {
-                case "a":
+                case "a" || "A":
                     p1UpdateMove("Jab");
                     break;
-                case "s":
+                case "s" || "S":
                     p1UpdateMove("Kick");
                     break;
-                case "j":
+                case "j" || "J":
                     p2UpdateMove("Jab");
                     break;
-                case "k":
+                case "k" || "K":
                     p2UpdateMove("Kick");
                     break;
             }
