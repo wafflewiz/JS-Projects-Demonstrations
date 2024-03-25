@@ -2,7 +2,13 @@
 Name: Rami Aljanaby
 Date: 3/25/24
 Description: This is a simple 2D fighting game. There are two characters, each has 2 interactive moves and an idle stance. 
-            Characters are both objects of the "Fighter" class.  
+            Characters are both objects of the "Fighter" class.
+             Player 1 Controls: 
+                        'a' - Jab
+                        's' - Kick
+            Player 2 Controls:
+                    'j' - Jab
+                    'k' - Big Jab
 */
 
 //Load Sprite images into an array
