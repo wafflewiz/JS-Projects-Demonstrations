@@ -3,8 +3,10 @@
 const imgArray = [
     "assets/P1Sprite/Attack_1.png",
     "assets/P1Sprite/Attack_3.png",
+    "assets/P1Sprite/Idle.png",
     "assets/P2Sprite/Attack_1.png",
     "assets/P2Sprite/Attack_3.png",
+    "assets/P1Sprite/Idle.png",
 ];
 
 //Creates an object for each image after theyre loaded into an array
@@ -33,8 +35,8 @@ const loadImages = async () => {
 
 // Call the function to load images, then run this code
 loadImages().then((images) => {
-    const player1 = new Fighter("P1", 100, "Idle", "Standing", "Jab", "Kick");
-    const player2 = new Fighter("P2", 100, "Idle", "Standing" , "Kick");
+    const player1 = new Fighter("P1", 100, "Idle", "Idle", "Kick");
+    const player2 = new Fighter("P2", 100, "Idle", "Idle" , "Kick");
     //size of img
     const scale = 1.2;
     //dimensions used for img and canvas
@@ -43,10 +45,12 @@ loadImages().then((images) => {
     const scaledWidth = scale * width;
     const scaledHeight = scale * height;
     const animLoops= {
-      alP1Jab: [0, 1, 0, 2, 0, 3],
-      alP1Kick: [0, 1, 0, 2, 0, 3], 
-      alP2Jab: [0, 1, 0, 2, 0, 3],
+      alP1Jab: [ 1, 2, 3],
+      alP1Kick: [1, 2, 3], 
+      alP1Idle:[1,2],
+      alP2Jab: [0, 1, 0, 2, 0, 3 ],
       alP2Kick: [0, 1, 0, 2, 0, 3],
+      alP2Idle:[1,2,3,4]
     }; 
     let p1CurrentImg;
     let p2CurrentImg;
@@ -89,7 +93,6 @@ loadImages().then((images) => {
                 setTimeout(function() {
                     location.reload();
                 }, 5000);
-
             }
         }
     }
@@ -132,17 +135,26 @@ loadImages().then((images) => {
     function p1DrawFrame(frameX, frameY, canvasX, canvasY) {
         context.drawImage(p1CurrentImg,
                       frameX * width, frameY * height, width, height,
-                      150, 128, scaledWidth, scaledHeight);
+                      120, 128, scaledWidth, scaledHeight);
     }
     function p2DrawFrame(frameX, frameY, canvasX, canvasY) {
         context.drawImage(p2CurrentImg,
                       frameX * width, frameY * height, width, height,
-                     200 , 128, scaledWidth, scaledHeight);
+                     220 , 128, scaledWidth, scaledHeight);
     }
+    //Draw an initial fram for each player
+    p1CurrentImg = images[2]
+    player1.currentAnimState = "Idle";
+    window.requestAnimationFrame(animateP1);
+    p2CurrentImg = images[4]
+    player2.currentAnimState= "Idle";
+    window.requestAnimationFrame(animateP2);
+
 
     //Resets to neutral by setting Index to 0
     function p1DefaultState(){
-        p1CurrentLoopIndex=0;    
+       p1CurrentLoopIndex=0;
+    
     }
     function p2DefaultState(){
         p2CurrentLoopIndex=0;
@@ -174,12 +186,12 @@ loadImages().then((images) => {
     //Animate the frames
     function animateP1() {
         p1FrameCount++;
-        if (p1FrameCount < 15) {
+        if (p1FrameCount < 10) {
             window.requestAnimationFrame(animateP1);
             return;
         }
         p1FrameCount = 0;
-        context.clearRect(150, 128, scaledWidth, scaledHeight);
+        context.clearRect(100, 130, scaledWidth, scaledHeight);
         switch (player1.currentAnimState) {              
             case "Jabbing":
                 p1DrawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
@@ -187,9 +199,15 @@ loadImages().then((images) => {
                 lengthOfArray=animLoops.alP1Jab.length;
             break;
             case "Kicking":
+                console.log("im kicking");
                 p1DrawFrame(animLoops.alP1Kick[p1CurrentLoopIndex], 0, 0, 0);
                 p1NextMoveRdy=false;
                 lengthOfArray=animLoops.alP1Kick.length;
+            break;
+            case "Idle":
+                p1DrawFrame(animLoops.alP1Idle[1], 0, 0, 0);
+                p1NextMoveRdy=true;
+                lengthOfArray=animLoops.alP1Idle.length;
             break;
 
         }
@@ -197,10 +215,15 @@ loadImages().then((images) => {
         if (!p1NextMoveRdy && p1CurrentLoopIndex < lengthOfArray){
             window.requestAnimationFrame(animateP1);
         }
+        else if(p1CurrentLoopIndex>=lengthOfArray){
+            p1CurrentLoopIndex = 0;
+            context.clearRect(100, 130, scaledWidth, scaledHeight);
+            p1DrawFrame(animLoops.alP1Idle[1], 0, 0, 0);
+        }
         else{
             p1DefaultState();
         }  
-}
+    }
     function animateP2() {
         p2FrameCount++;
         if (p2FrameCount < 15) {
@@ -208,7 +231,8 @@ loadImages().then((images) => {
             return;
         }
         p2FrameCount = 0;
-        context.clearRect(scaledWidth, scaledHeight, 300 , 300);
+        context.clearRect(225, 130, scaledWidth, scaledHeight);
+        console.log("rec cleared" + player2.currentAnimState)
         switch (player2.currentAnimState) {              
             case "Jabbing":
                 p2DrawFrame(animLoops.alP2Jab[p2CurrentLoopIndex], 0, 0, 0);
@@ -219,6 +243,11 @@ loadImages().then((images) => {
                 p2DrawFrame(animLoops.alP2Kick[p2CurrentLoopIndex], 0, 0, 0);
                 p2NextMoveRdy=false;
                 lengthOfArray=animLoops.alP2Kick.length;
+            break;
+            case "Idle":
+                p2DrawFrame(animLoops.alP2Jab[5], 0, 0, 0);
+                p2NextMoveRdy=true;
+                lengthOfArray=animLoops.alP2Idle.length;
             break;
 
         }
@@ -296,14 +325,14 @@ loadImages().then((images) => {
             case "Jab":
               player1.hp -= 5;
               console.log(player1.hp);
-              p2CurrentImg = images[2];
+              p2CurrentImg = images[3];
               player2.currentAnimState="Jabbing";
               window.requestAnimationFrame(animateP2);
               p1DrawHealthBar();
               break;
             case "Kick":
               player1.hp -= 10;
-              p2CurrentImg = images[3];
+              p2CurrentImg = images[4];
               player2.currentAnimState="Kicking";
               window.requestAnimationFrame(animateP2);
               p1DrawHealthBar();

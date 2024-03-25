@@ -6,11 +6,4 @@ class Fighter{
         this.currentAnimState=currentAnimState;
         this.moves= moves;
       }
-    //   useJab(){
-    //     this.moves.push("Jab");
-    //   }
-    //   useKick(){
-    //     this.moves.push("Low Kick");
-    //   }
-      
 }
