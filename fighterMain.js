@@ -4,7 +4,7 @@ const imgArray = [
     "assets/P1Sprite/Attack_1.png",
     "assets/P1Sprite/Attack_3.png",
     "assets/P2Sprite/Attack_1.png",
-    "assets/P2Sprite/Attack_2.png",
+    "assets/P2Sprite/Attack_3.png",
 ];
 
 //Creates an object for each image after theyre loaded into an array
@@ -46,7 +46,7 @@ loadImages().then((images) => {
       alP1Jab: [0, 1, 0, 2, 0, 3],
       alP1Kick: [0, 1, 0, 2, 0, 3], 
       alP2Jab: [0, 1, 0, 2, 0, 3],
-      alP2Kick: [0, 1, 0, 2, 0, 3, 0, 4],
+      alP2Kick: [0, 1, 0, 2, 0, 3],
     }; 
     let p1CurrentImg;
     let p2CurrentImg;
@@ -64,35 +64,47 @@ loadImages().then((images) => {
 
     //Creates P1 Health bar
     function p1DrawHealthBar() {
-        console.log("p1DrawHealthBar")
+        console.log("p1DrawHealthBar");
+    
+        // Clear the area for player 1's health bar
+        context.clearRect(20, 50, 200, 15);
 
-        if (player1.hp > 0) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          // Draw the health bar
-          context.fillStyle = "aqua";
-          context.fillRect(20, 50, player1.hp * 2, 15);
-        } 
-        else {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            player1.currentAnimState="Dead";
-            animateP1();
-        }
+    
+        // Draw the health bar for player 1
+        context.fillStyle = "aqua";
+        context.fillRect(20, 50, player1.hp * 2, 15);
     }
+    function p2DrawHealthBar() {
+        var newX = 450 - (player2.hp * 2) - 10
+        console.log("p2DrawHealthBar");
+    
+        // Clear the area for player 2's health bar
+        context.clearRect(20 + (player1.maxHp * 2) - (player1.hp * 2), 50, player2.hp*2 , 15);
+    
+        // Calculate the width of the health bar based on player 2's current health
+        var healthBarWidth = Math.max(0, player2.hp * 2);
+    
+        // Draw the health bar for player 2
+        context.fillStyle = "aqua";
+        context.fillRect(20 + (player2.maxHp * 2) - (player1.hp * 2), 50, player2.hp , 15);
+    }
+ 
 
-    p1DrawHealthBar();
     init();
  
     //draws the 2D image onto canvas
     function p1DrawFrame(frameX, frameY, canvasX, canvasY) {
         context.drawImage(p1CurrentImg,
                       frameX * width, frameY * height, width, height,
-                      10, 128, scaledWidth, scaledHeight);
+                      150, 128, scaledWidth, scaledHeight);
     }
     function p2DrawFrame(frameX, frameY, canvasX, canvasY) {
         context.drawImage(p2CurrentImg,
                       frameX * width, frameY * height, width, height,
-                     300 , 128, scaledWidth, scaledHeight);
+                     200 , 128, scaledWidth, scaledHeight);
     }
+
+    //Resets to neutral by setting Index to 0
     function p1DefaultState(){
         p1CurrentLoopIndex=0;    
     }
@@ -102,18 +114,16 @@ loadImages().then((images) => {
 
     // Main Game Loop
     function init() {
-        
+        p1DrawHealthBar();
+        p2DrawHealthBar();
         //Listens for a keyboard input
         KeyInput = window.addEventListener("keydown", function (event) {
             switch (event.key) {
                 case "a":
-                    console.log("keydown")
-
                     p1UpdateMove("Jab");
                     break;
                 case "s":
                     p1UpdateMove("Kick");
-                    console.log("s was pressed");
                     break;
                 case "j":
                     p2UpdateMove("Jab");
@@ -121,15 +131,11 @@ loadImages().then((images) => {
                 case "k":
                     p2UpdateMove("Kick");
                     break;
-                case "":
-                   
-                break;
-                default:
-                                       break;
             }
         });
 
     }
+    //Animate the frames
     function animateP1() {
         p1FrameCount++;
         if (p1FrameCount < 15) {
@@ -137,7 +143,7 @@ loadImages().then((images) => {
             return;
         }
         p1FrameCount = 0;
-        context.clearRect(0, 128, scaledWidth, scaledHeight);
+        context.clearRect(150, 128, scaledWidth, scaledHeight);
         switch (player1.currentAnimState) {              
             case "Jabbing":
                 p1DrawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
@@ -160,59 +166,39 @@ loadImages().then((images) => {
         }  
 }
     function animateP2() {
-        while (p2NextMoveRdy){    
-            p2FrameCount++;
-            if (p2FrameCount < 7) {
+        p2FrameCount++;
+        if (p2FrameCount < 15) {
             window.requestAnimationFrame(animateP2);
             return;
-            }
-            p2FrameCount = 0;
-            context.clearRect(scaledWidth, scaledHeight, 300 , 300);
-            switch (player2.currentAnimState) {
-                case "Standing":       
-                context.beginPath();    
-                p2DrawFrame(animLoops.alP2Idle[p2CurrentLoopIndex], 0, 0, 0);
-                p2CurrentLoopIndex++;
-                if (p2CurrentLoopIndex >= animLoops.alP2Idle.length+1) {
-                    p2NextMoveRdy=false;
-                p2DefaultState();
-                }  
-                  break;
-                case "Jabbing":
-                context.beginPath();    
-                p2DrawFrame(animLoops.alP2Jab[p2CurrentLoopIndex], 0, 0, 0);
-                p2CurrentLoopIndex++;
-                if (p2CurrentLoopIndex >= animLoops.alP2Jab.length+1) {
-                    p2NextMoveRdy=false;
-                p2DefaultState();
-                }  
-                  break;
-                case "Kicking":
-                    context.beginPath();    
-
-                p2DrawFrame(animLoops.alP2Kick[p2CurrentLoopIndex], 0, 0, 0);
-                p2CurrentLoopIndex++;
-                if (p2CurrentLoopIndex >= animLoops.alP2Kick.length+1) {
-                    p2NextMoveRdy=false;
-                p2DefaultState();  
-                  break;
-              }
-            //drawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
-            // p2CurrentLoopIndex++;
-            // if (p2CurrentLoopIndex >= cycleLoop.length+1) {
-            //     p1NextMoveRdy=false;
-            //     defaultState();
-            }
-            window.requestAnimationFrame(animateP2);
-            break;
         }
+        p2FrameCount = 0;
+        context.clearRect(scaledWidth, scaledHeight, 300 , 300);
+        switch (player2.currentAnimState) {              
+            case "Jabbing":
+                p2DrawFrame(animLoops.alP2Jab[p2CurrentLoopIndex], 0, 0, 0);
+                p2NextMoveRdy=false;
+                lengthOfArray=animLoops.alP2Jab.length;
+            break;
+            case "Kicking":
+                p2DrawFrame(animLoops.alP2Kick[p2CurrentLoopIndex], 0, 0, 0);
+                p2NextMoveRdy=false;
+                lengthOfArray=animLoops.alP2Kick.length;
+            break;
+
+        }
+        p2CurrentLoopIndex++;
+        if (!p2NextMoveRdy && p2CurrentLoopIndex < lengthOfArray){
+            window.requestAnimationFrame(animateP2);
+        }
+        else{
+            p2DefaultState();
+        }  
     }
     
-    
+    //Update Current Move
     function p1UpdateMove(useMove) {
       switch (useMove) {
         case "Kick":
-            console.log("p1UpdateMove")
           p1NextMoveRdy=true;
           player1.currentMove = "Kick";
           p1Attack();
@@ -234,64 +220,59 @@ loadImages().then((images) => {
             p2NextMoveRdy=true;
             player2.currentMove = "Kick";
             p2Attack();
-            window.requestAnimationFrame(animateP2);
             player2.currentMove = "";
     
           break;
         case "Jab":
             p2NextMoveRdy=true;
-            player2.currentMove = "Kick";
+            player2.currentMove = "Jab"
             p2Attack();
             player2.currentMove = "";
     
           break;
       }
     }
+    //Grab spritesheet and animate the attack
     function p1Attack() {
 
           switch (player1.currentMove) {
             case "Jab":
-            console.log("p1Attack")
               player2.hp -= 5;
               p1CurrentImg=images[0];
               player1.currentAnimState="Jabbing";
+              p2DrawHealthBar();
               window.requestAnimationFrame(animateP1);
-              console.log("P2 -5 HP!");
-              break;
+              console.log("finna drawg p2 healthbar")
+              console.log(player2.hp);
+            break;
+            case "Kick":
+              player2.hp -= 5;
+              p1CurrentImg=images[1];
+              player1.currentAnimState="Kicking";
+              p2DrawHealthBar();
+              window.requestAnimationFrame(animateP1);
+            break;
             
          }
     }
     function p2Attack() {
-        while (p1IsBlocking === false) {
           switch (player2.currentMove) {
             case "Jab":
               player1.hp -= 5;
-              p2CurrentImg = images[5];
+              console.log(player1.hp);
+              p2CurrentImg = images[2];
               player2.currentAnimState="Jabbing";
-              console.log("P1 -5 HP!");
               window.requestAnimationFrame(animateP2);
               p1DrawHealthBar();
               break;
             case "Kick":
               player1.hp -= 10;
-              p2CurrentImg = images[6];
+              p2CurrentImg = images[3];
               player2.currentAnimState="Kicking";
-              console.log("P1 -10 HP!");
               window.requestAnimationFrame(animateP2);
               p1DrawHealthBar();
               break;
-          }
-          
-        }
+          }         
     }
-    
-
-  
-  // Initial drawing of the health bar
-    
-}).catch((error) => {
-    console.error("Error loading images:", error);
-});
-
-  
+})
 
