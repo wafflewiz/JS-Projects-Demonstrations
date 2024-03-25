@@ -242,7 +242,7 @@ loadImages().then((images) => {
   }
   function animateP2() {
     p2FrameCount++;
-    if (p2FrameCount < 15) {
+    if (p2FrameCount < 10) {
       window.requestAnimationFrame(animateP2);
       return;
     }
