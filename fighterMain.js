@@ -49,8 +49,8 @@ const loadImages = async () => {
 
 // Call the function to load images, then run this code
 loadImages().then((images) => {
-  const player1 = new Fighter("P1", 100, "Idle", "Idle", "Kick");
-  const player2 = new Fighter("P2", 100, "Idle", "Idle", "Kick");
+  const player1 = new Fighter("P1", 100, "Idle", "Idle", "Jab", "Kick");
+  const player2 = new Fighter("P2", 100, "Idle", "Idle", "Jab", "Kick");
   //size of img
   const scale = 1.2;
   //dimensions used for img and canvas
@@ -110,7 +110,6 @@ loadImages().then((images) => {
   function p2DrawHealthBar() {
     if (player2.hp > 0) {
       var newX = 450 - player2.hp * 2 - 10;
-      console.log("p2DrawHealthBar");
 
       // Clear the area for player 2's health bar
       context.clearRect(240, 50, 220, 15);
@@ -220,7 +219,6 @@ loadImages().then((images) => {
         lengthOfArray = animLoops.alP1Jab.length;
         break;
       case "Kicking":
-        console.log("im kicking");
         p1DrawFrame(animLoops.alP1Kick[p1CurrentLoopIndex], 0, 0, 0);
         p1NextMoveRdy = false;
         lengthOfArray = animLoops.alP1Kick.length;
@@ -250,7 +248,6 @@ loadImages().then((images) => {
     }
     p2FrameCount = 0;
     context.clearRect(225, 130, scaledWidth, scaledHeight);
-    console.log("rec cleared" + player2.currentAnimState);
     switch (player2.currentAnimState) {
       case "Jabbing":
         p2DrawFrame(animLoops.alP2Jab[p2CurrentLoopIndex], 0, 0, 0);
@@ -322,8 +319,6 @@ loadImages().then((images) => {
         player1.currentAnimState = "Jabbing";
         p2DrawHealthBar();
         window.requestAnimationFrame(animateP1);
-        console.log("finna drawg p2 healthbar");
-        console.log(player2.hp);
         break;
       case "Kick":
         player2.hp -= 10;
@@ -338,7 +333,6 @@ loadImages().then((images) => {
     switch (player2.currentMove) {
       case "Jab":
         player1.hp -= 5;
-        console.log(player1.hp);
         p2CurrentImg = images[3];
         player2.currentAnimState = "Jabbing";
         window.requestAnimationFrame(animateP2);
