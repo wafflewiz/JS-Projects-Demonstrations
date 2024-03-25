@@ -39,8 +39,8 @@ const loadImages = async () => {
 // Call the function to load images
 loadImages().then((images) => {
     // Do something with the loaded images
-    const player1 = new Fighter("P1", 100, "", "", "Jab", "Kick");
-    const player2 = new Fighter("P2", 100, "", "", "Jab" , "Kick");
+    const player1 = new Fighter("P1", 100, "Idle", "Standing", "Jab", "Kick");
+    const player2 = new Fighter("P2", 100, "Idle", "Standing" , "Kick");
     //size of img
     const scale = 1.2;
     //dimensions used for img and canvas
@@ -88,10 +88,41 @@ loadImages().then((images) => {
     let canvas = document.querySelector("canvas");
     let context = canvas.getContext("2d");
     //defaultState();
+    function p1DrawHealthBar() {
+        console.log("p1DrawHealthBar")
+
+        if (player1.hp > 0) {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          // Draw the health bar
+          context.fillStyle = "aqua";
+          context.fillRect(20, 50, player1.hp * 2, 15);
+        } 
+        else {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            player1.currentAnimState="Dead";
+            animateP1();
+        }
+      }
+    p1DrawHealthBar();
     init();
-    
+    function idle() {
+        console.log("idle function")
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.beginPath();    
+        p2CurrentImg = images[2];
+        p1DrawFrame(animLoops.alP1Idle, 0, 0, 0);
+        p1CurrentLoopIndex++;
+        if (p1CurrentLoopIndex >= animLoops.alP1Dead.length+1) {
+          p1CurrentLoopIndex = 0;
+          init();
+        }
+        window.requestAnimationFrame(animateP1, animateP2);
+      }
     //draws the 2D image onto canvas
     function p1DrawFrame(frameX, frameY, canvasX, canvasY) {
+        console.log("DRAWFRAME CALL");
+        console.log(p1CurrentImg);
         context.drawImage(p1CurrentImg,
                       frameX * width, frameY * height, width, height,
                       10, 128, scaledWidth, scaledHeight);
@@ -101,10 +132,15 @@ loadImages().then((images) => {
                       frameX * width, frameY * height, width, height,
                      300 , 128, scaledWidth, scaledHeight);
     }
-    function defaultState(){
-        p1CurrentLoopIndex=0;
+    function p1DefaultState(){
+        
+
+        //p1DrawFrame(animLoops.alP1Jab[1], 0, 0, 0);
+        //p2DrawFrame(animLoops.alP2Jab[1], 0, 0, 0);
+    
+    }
+    function p2DefaultState(){
         p2CurrentLoopIndex=0;
-        context.clearRect(0, 128, scaledWidth, scaledHeight);
         context.clearRect(scaledWidth, scaledHeight, 300 , 300);
 
         //p1DrawFrame(animLoops.alP1Jab[1], 0, 0, 0);
@@ -113,10 +149,13 @@ loadImages().then((images) => {
     }
     // main function
     function init() {
-    
+        
+
         KeyInput = window.addEventListener("keydown", function (event) {
             switch (event.key) {
                 case "a":
+                    console.log("keydown")
+
                     p1UpdateMove("Jab");
                     break;
                 case "s":
@@ -130,8 +169,6 @@ loadImages().then((images) => {
                     p2UpdateMove("Kick");
                     break;
                 default:
-                    p1UpdateMove("Idle");
-                    p2UpdateMove("Idle");
                     break;
             }
         });
@@ -151,42 +188,73 @@ loadImages().then((images) => {
     }
     //
     function animateP1() {
-        while (p1NextMoveRdy){    
+        console.log("animateP1");
+
+        console.log("frrames" + p1FrameCount);   
+
+            console.log(player1.currentAnimState);   
             p1FrameCount++;
             if (p1FrameCount < 10) {
             window.requestAnimationFrame(animateP1);
             return;
             }
             p1FrameCount = 0;
-            context.clearRect(128, 0, scaledWidth, scaledHeight);
+            context.clearRect(0, 128, scaledWidth, scaledHeight);
+            console.log(player1.currentAnimState + "check 2");   
+
             switch (player1.currentAnimState) {
-                case "Standing":       
+                case "Standing":
+                   // context.beginPath();    
+                p1DrawFrame(animLoops.alP1Idle[p1CurrentLoopIndex], 0, 0, 0);
+                p1CurrentLoopIndex++;
+                
+                if (p1CurrentLoopIndex >= animLoops.alP1Idle.length+1) {
+                    p1NextMoveRdy=false;
+                     
+                        
+                  }         
                   break;
                 case "Jabbing":
-                context.beginPath();    
-                p1DrawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
-                p1CurrentLoopIndex++;
-                if (p1CurrentLoopIndex >= animLoops.alP1Jab.length+1) {
-                    p1NextMoveRdy=false;
-                    defaultState();
+                //context.beginPath();    
+                for (let index = 0; index < animLoops.alP1Jab.length; index++) {
+                   console.log("next moove ready" + p1NextMoveRdy)
+                        const element = animLoops.alP1Jab[index];
+                        p1DrawFrame(element, 0, 0, 0);
+                    //console.log("IM BEING CALLED")
+                    console.log("index is" + index)
+
+                    console.log( "length of array is" + animLoops.alP1Jab.length);
+                    //window.requestAnimationFrame(animateP1);
                 }  
+                p1NextMoveRdy=false;
+                window.requestAnimationFrame(animateP1);
+
                   break;
                 case "Kicking":
-                context.beginPath();   
+                //context.beginPath();   
                 p1CurrentLoopIndex++;
                 if (p1CurrentLoopIndex >= animLoops.alP1Jab.length+1) {
                     p1NextMoveRdy=false;
-                    defaultState();
+                    p1DefaultState();
                 } 
+                    break;
+                case "Dead":
+                    context.beginPath();    
+                    p1DrawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
+                    p1CurrentLoopIndex++;
+                    if (p1CurrentLoopIndex >= animLoops.alP1Jab.length+1) {                       
+                    }  
 
                 p1DrawFrame(animLoops.alP1Kick[p1CurrentLoopIndex], 0, 0, 0);  
                   break;
             }
             //drawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
-           
-            window.requestAnimationFrame(animateP1);
-            break;
-        }
+        //    if (p1NextMoveRdy){
+        //         console.log("IM BEING CALLED")
+        //         window.requestAnimationFrame(animateP1);
+                
+        //     }
+        
     }
     function animateP2() {
         while (p2NextMoveRdy){    
@@ -196,9 +264,16 @@ loadImages().then((images) => {
             return;
             }
             p2FrameCount = 0;
-            context.clearRect(scaledWidth, scaledHeight, 10 , 128);
+            context.clearRect(scaledWidth, scaledHeight, 300 , 300);
             switch (player2.currentAnimState) {
                 case "Standing":       
+                context.beginPath();    
+                p2DrawFrame(animLoops.alP2Idle[p2CurrentLoopIndex], 0, 0, 0);
+                p2CurrentLoopIndex++;
+                if (p2CurrentLoopIndex >= animLoops.alP2Idle.length+1) {
+                    p2NextMoveRdy=false;
+                p2DefaultState();
+                }  
                   break;
                 case "Jabbing":
                 context.beginPath();    
@@ -206,7 +281,7 @@ loadImages().then((images) => {
                 p2CurrentLoopIndex++;
                 if (p2CurrentLoopIndex >= animLoops.alP2Jab.length+1) {
                     p2NextMoveRdy=false;
-                defaultState();
+                p2DefaultState();
                 }  
                   break;
                 case "Kicking":
@@ -216,7 +291,7 @@ loadImages().then((images) => {
                 p2CurrentLoopIndex++;
                 if (p2CurrentLoopIndex >= animLoops.alP2Kick.length+1) {
                     p2NextMoveRdy=false;
-                defaultState();  
+                p2DefaultState();  
                   break;
               }
             //drawFrame(animLoops.alP1Jab[p1CurrentLoopIndex], 0, 0, 0);
@@ -234,10 +309,10 @@ loadImages().then((images) => {
     function p1UpdateMove(useMove) {
       switch (useMove) {
         case "Kick":
+            console.log("p1UpdateMove")
           p1NextMoveRdy=true;
           player1.currentMove = "Kick";
           p1Attack();
-          window.requestAnimationFrame(animateP1);
           player1.currentMove = "";
     
           break;
@@ -245,13 +320,23 @@ loadImages().then((images) => {
           p1NextMoveRdy=true;
           player1.currentMove = "Jab";
           p1Attack();
-          window.requestAnimationFrame(animateP1);
           player1.currentMove = "";
     
           break;
+          case "Idle":
+            p1NextMoveRdy=true;
+            player1.currentMove = "";
+            p1Attack();
+            player1.currentMove = "Idle";
+      
+            break;  
         default:
-          //player1.currentMove = "";
-          break;
+            // p2NextMoveRdy=true;
+            // player2.currentMove = "Idle";
+            // p1Attack();
+            // window.requestAnimationFrame(animateP2);
+            // player2.currentMove = "Idle";    
+      break;
       }
     }
     function p2UpdateMove(useMove2) {
@@ -268,13 +353,21 @@ loadImages().then((images) => {
             p2NextMoveRdy=true;
             player2.currentMove = "Kick";
             p2Attack();
-            window.requestAnimationFrame(animateP2);
             player2.currentMove = "";
     
           break;
+          case "Idle":
+            p2NextMoveRdy=true;
+            player2.currentMove = "Idle";
+            p1Attack();
+            player2.currentMove = ""; 
+            break; 
         default:
-          //player1.currentMove = "";
-    
+                // p2NextMoveRdy=true;
+                // player2.currentMove = "Idle";
+                // p1Attack();
+                // window.requestAnimationFrame(animateP2);
+                // player2.currentMove = "Idle";    
           break;
       }
     }
@@ -283,17 +376,25 @@ loadImages().then((images) => {
         while (p2IsBlocking === false) {
           switch (player1.currentMove) {
             case "Jab":
+            console.log("p1Attack")
               player2.hp -= 5;
               p1CurrentImg=images[0];
               player1.currentAnimState="Jabbing";
+              window.requestAnimationFrame(animateP1);
               console.log("P2 -5 HP!");
               break;
             case "Kick":
               player2.hp -= 10;
               p1CurrentImg=images[1];
               player1.currentAnimState="Kicking";
+              window.requestAnimationFrame(animateP1);
               console.log("P2 -10 HP!");
-    
+              break;
+              case "Idle":
+                p1CurrentImg=images[2];
+                player1.currentAnimState="Standing";
+                window.requestAnimationFrame(animateP1);
+                console.log("P2 -10 HP!");    
               break;
             default:
               p1UpdateMove(KeyInput);
@@ -310,12 +411,26 @@ loadImages().then((images) => {
               p2CurrentImg = images[5];
               player2.currentAnimState="Jabbing";
               console.log("P1 -5 HP!");
+              window.requestAnimationFrame(animateP2);
+
+              p1DrawHealthBar();
+
               break;
             case "Kick":
               player1.hp -= 10;
               p2CurrentImg = images[6];
               player2.currentAnimState="Kicking";
               console.log("P1 -10 HP!");
+              window.requestAnimationFrame(animateP2);
+
+              p1DrawHealthBar();
+
+              break;
+              case "Idle":
+              p2CurrentImg = images[9];
+              player2.currentAnimState="Standing";
+              console.log("P1 -10 HP!");
+              window.requestAnimationFrame(animateP2);
               break;
             default:
               p2UpdateMove(keyInput);
@@ -324,6 +439,10 @@ loadImages().then((images) => {
           break;
         }
     }
+    
+
+  
+  // Initial drawing of the health bar
     
 }).catch((error) => {
     console.error("Error loading images:", error);
