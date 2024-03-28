@@ -173,13 +173,6 @@ loadImages().then((images) => {
   player2.currentAnimState = "Idle";
   window.requestAnimationFrame(animateP2);
 
-  //Resets to neutral by setting Index to 0
-  function p1DefaultState() {
-    p1CurrentLoopIndex = 0;
-  }
-  function p2DefaultState() {
-    p2CurrentLoopIndex = 0;
-  }
 
   // Main Game Loop
   function init() {
@@ -203,6 +196,80 @@ loadImages().then((images) => {
       }
     });
   }
+    //Update Current Move
+    function p1UpdateMove(useMove) {
+      switch (useMove) {
+        case "Kick":
+          p1NextMoveRdy = true;
+          player1.currentMove = "Kick";
+          p1Attack();
+          player1.currentMove = "";
+          break;
+  
+        case "Jab":
+          p1NextMoveRdy = true;
+          player1.currentMove = "Jab";
+          p1Attack();
+          player1.currentMove = "";
+  
+          break;
+      }
+    }
+    function p2UpdateMove(useMove2) {
+      switch (useMove2) {
+        case "Kick":
+          p2NextMoveRdy = true;
+          player2.currentMove = "Kick";
+          p2Attack();
+          player2.currentMove = "";
+  
+          break;
+        case "Jab":
+          p2NextMoveRdy = true;
+          player2.currentMove = "Jab";
+          p2Attack();
+          player2.currentMove = "";
+  
+          break;
+      }
+    }
+    //Grab spritesheet and animate the attack
+    function p1Attack() {
+      switch (player1.currentMove) {
+        case "Jab":
+          player2.hp -= 5;
+          p1CurrentImg = images[0];
+          player1.currentAnimState = "Jabbing";
+          p2DrawHealthBar();
+          window.requestAnimationFrame(animateP1);
+          break;
+        case "Kick":
+          player2.hp -= 10;
+          p1CurrentImg = images[1];
+          player1.currentAnimState = "Kicking";
+          p2DrawHealthBar();
+          window.requestAnimationFrame(animateP1);
+          break;
+      }
+    }
+    function p2Attack() {
+      switch (player2.currentMove) {
+        case "Jab":
+          player1.hp -= 5;
+          p2CurrentImg = images[3];
+          player2.currentAnimState = "Jabbing";
+          window.requestAnimationFrame(animateP2);
+          p1DrawHealthBar();
+          break;
+        case "Kick": //Big Jab
+          player1.hp -= 10; //Big Jab Dmg
+          p2CurrentImg = images[4];
+          player2.currentAnimState = "Kicking";
+          window.requestAnimationFrame(animateP2);
+          p1DrawHealthBar();
+          break;
+      }
+    }
   //Animate the frames
   function animateP1() {
     p1FrameCount++;
@@ -266,85 +333,17 @@ loadImages().then((images) => {
         break;
     }
     p2CurrentLoopIndex++;
-    if (!p2NextMoveRdy && p2CurrentLoopIndex < lengthOfArray) {
+    if (!p2NextMoveRdy && p2CurrentLoopIndex < lengthOfArray - 2) {
       window.requestAnimationFrame(animateP2);
     } else {
       p2DefaultState();
     }
   }
-
-  //Update Current Move
-  function p1UpdateMove(useMove) {
-    switch (useMove) {
-      case "Kick":
-        p1NextMoveRdy = true;
-        player1.currentMove = "Kick";
-        p1Attack();
-        player1.currentMove = "";
-        break;
-
-      case "Jab":
-        p1NextMoveRdy = true;
-        player1.currentMove = "Jab";
-        p1Attack();
-        player1.currentMove = "";
-
-        break;
-    }
+  //Resets to neutral by setting Index to 0
+  function p1DefaultState() {
+    p1CurrentLoopIndex = 0;
   }
-  function p2UpdateMove(useMove2) {
-    switch (useMove2) {
-      case "Kick":
-        p2NextMoveRdy = true;
-        player2.currentMove = "Kick";
-        p2Attack();
-        player2.currentMove = "";
-
-        break;
-      case "Jab":
-        p2NextMoveRdy = true;
-        player2.currentMove = "Jab";
-        p2Attack();
-        player2.currentMove = "";
-
-        break;
-    }
-  }
-  //Grab spritesheet and animate the attack
-  function p1Attack() {
-    switch (player1.currentMove) {
-      case "Jab":
-        player2.hp -= 5;
-        p1CurrentImg = images[0];
-        player1.currentAnimState = "Jabbing";
-        p2DrawHealthBar();
-        window.requestAnimationFrame(animateP1);
-        break;
-      case "Kick":
-        player2.hp -= 10;
-        p1CurrentImg = images[1];
-        player1.currentAnimState = "Kicking";
-        p2DrawHealthBar();
-        window.requestAnimationFrame(animateP1);
-        break;
-    }
-  }
-  function p2Attack() {
-    switch (player2.currentMove) {
-      case "Jab":
-        player1.hp -= 5;
-        p2CurrentImg = images[3];
-        player2.currentAnimState = "Jabbing";
-        window.requestAnimationFrame(animateP2);
-        p1DrawHealthBar();
-        break;
-      case "Kick": //Big Jab
-        player1.hp -= 10; //Big Jab Dmg
-        p2CurrentImg = images[4];
-        player2.currentAnimState = "Kicking";
-        window.requestAnimationFrame(animateP2);
-        p1DrawHealthBar();
-        break;
-    }
+  function p2DefaultState() {
+    p2CurrentLoopIndex = 0;
   }
 });
