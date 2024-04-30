@@ -1,0 +1,12 @@
+.node {
+    display: inline-block;
+    border: 1px solid black;
+    padding: 5px;
+    margin: 5px;
+}
+.node-value {
+    font-weight: bold;
+}
+.node-children {
+    margin-left: 10px;
+}
