@@ -1,12 +1,58 @@
+/* CSS for tree visualization */
+
+.tree {
+    font-family: Arial, sans-serif;
+}
+
 .node {
-    display: inline-block;
-    border: 1px solid black;
-    padding: 5px;
-    margin: 5px;
+    padding: 10px;
+    border: 1px solid #1aa126;
+    margin-bottom: 10px;
 }
-.node-value {
-    font-weight: bold;
+
+.node:first-child {
+    margin-top: 10px;
 }
-.node-children {
-    margin-left: 10px;
+
+.node::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #ccc;
 }
+
+.node > .node {
+    margin-left: 20px;
+}
+
+/* CSS for array visualization */
+
+.array {
+    font-family: Arial, sans-serif;
+}
+
+.array-element {
+    padding: 10px;
+    border: 1px solid #1aa126;
+    margin-bottom: 10px;
+}
+
+.array-element:first-child {
+    margin-top: 10px;
+}
+
+.array-element::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #ccc;
+}
+
