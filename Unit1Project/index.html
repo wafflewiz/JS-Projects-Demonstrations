@@ -1,0 +1,37 @@
+<html>
+<!--
+    Name: Rami Aljanaby
+    Date: 2/5/24
+    Description: This project demonstrates usage of JS in combination with HTML to manipulate the DOM. 
+
+-->
+    <head>
+        <title>Color Changing Website</title>
+        <script src = "script.js" defer></script>
+        <style src = "style.css"></style>  
+    </head>
+    
+    <body>
+
+        <div id ="colorDisplay">
+            <p>
+                <h4>Welcome! This website will cycle through colors, you choose how fast!</h4>
+                Click the "Change Color" button to begin:
+            </p>
+            <button id = "button">Change Color</button>
+            <button id = "button2">RESET</button>
+            <div id ="colorInfo"></div>
+        </div>
+
+        <div id="sliderDisplay">
+            <p>
+                Adjust interval in seconds between color changes:
+            </p>
+            <div id="slider">
+                <input type="range" min="1" max="5" value="2.5" id="colorslider">
+            </div>
+            <div id="sliderInfo"></div>
+        </div>
+
+    </body>
+</html>
